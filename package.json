@@ -1,0 +1,23 @@
+{
+  "name": "expense-tracker-backend",
+  "version": "0.0.1",
+  "description": "Expense Tracker Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dipankar-majumder/expense-tracker-backend.git"
+  },
+  "keywords": [
+    "Expense",
+    "Tracker"
+  ],
+  "author": "Dipankar Majumder",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dipankar-majumder/expense-tracker-backend/issues"
+  },
+  "homepage": "https://github.com/dipankar-majumder/expense-tracker-backend#readme"
+}
