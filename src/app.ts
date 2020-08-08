@@ -3,6 +3,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { config } from 'dotenv';
 import { connect } from 'mongoose';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
 
 import router from './routes';
 
@@ -40,13 +42,30 @@ app.use(cors());
 //   next();
 // });
 
-// app.get('/', (req: Request, res: Response) =>
-//   res.status(200).json({ message: 'Hello, Express! 🙂' }),
-// );
+const swaggerSpec = swaggerJSDoc({
+  swaggerDefinition: {
+    info: { title: 'Hello World', version: '0.0.1' },
+    basePath: '/',
+    openapi: '3.0.0',
+  },
+  // Path to the API docs
+  apis: ['./src/routes/*.ts'],
+});
+
+app.get('/api-docs.json', function (req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.get('/', (req: Request, res: Response) =>
+  res.status(200).json({ message: 'Hello, Express! 🙂' }),
+);
 
 app.use('/api', router);
 
-interface RouteError {
+export interface RouteError {
   status: number;
   message: string;
 }
