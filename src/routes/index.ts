@@ -1,9 +1,10 @@
 import { Router, Response, Request } from 'express';
 
-import expensesRoutes from './expenses';
+import expenseRoutes from './expense';
 import authRoutes from './auth';
+import userRoutes from './user';
 
-const router = Router();
+const routes = Router();
 
 /**
  * @swagger
@@ -18,11 +19,14 @@ const router = Router();
  *         schema:
  *           type: object
  */
-router.get('/', (req: Request, res: Response) =>
+routes.get('/', (req: Request, res: Response) =>
   res.status(200).json({ message: 'Hello, REST API! 🙂' }),
 );
 
-router.use('/expenses', expensesRoutes);
-router.use('/auth', authRoutes);
+routes.use('/expenses', expenseRoutes);
 
-export default router;
+routes.use('/auth', authRoutes);
+
+routes.use('/user', userRoutes);
+
+export default routes;

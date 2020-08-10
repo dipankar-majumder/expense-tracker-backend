@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import expenseService from '../services/expense';
-import { Expense } from '../models/expense';
+
+import expenseModel, { Expense } from '../models/expense';
 
 const expenseController = {
   create: async (
@@ -8,13 +8,26 @@ const expenseController = {
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
-    // const newExpense: Expense = { ...req.body, date: new Date(req.body.date) };
-    const newExpense: Expense = { ...req.body };
     try {
-      const result = await expenseService.create(newExpense);
-      res.status(201).json(result);
+      const newExpense = await expenseModel.create({
+        ...req.body,
+        user: req.user,
+      } as Expense);
+      res.status(201).json(newExpense);
     } catch (err) {
       next({ status: 500, message: err.message, ...err });
+    }
+  },
+  getAll: async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const expenses = await expenseModel.find({ user: req.user });
+      res.status(200).json(expenses);
+    } catch (err) {
+      next({ status: 500, message: err.message });
     }
   },
   get: async (
@@ -24,12 +37,12 @@ const expenseController = {
   ): Promise<void> => {
     const { id } = req.params;
     try {
-      const expenses = await expenseService.find(id);
+      const expense = await expenseModel.findById(id);
       try {
-        if (expenses === null) {
+        if (expense === null) {
           throw new Error('Expense Not Found');
         }
-        res.status(200).json(expenses);
+        res.status(200).json(expense);
       } catch (err) {
         next({ status: 404, message: err.message });
       }
@@ -46,7 +59,7 @@ const expenseController = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id, ...updateQuery } = req.body;
     try {
-      const result = await expenseService.update(id, updateQuery);
+      const result = await expenseModel.findByIdAndUpdate(id, updateQuery);
       res.status(200).json(result);
     } catch (err) {
       next({ status: 500, message: err.message });
@@ -59,17 +72,29 @@ const expenseController = {
   ): Promise<void> => {
     const { id } = req.params;
     try {
-      const expenses = await expenseService.delete(id);
+      const expenses = await expenseModel.findByIdAndDelete(id);
       try {
         if (expenses === null) {
           throw new Error('Expense Not Found');
         }
         res.status(200).json(expenses);
       } catch (err) {
-        next({ status: 404, message: err.message });
+        next({
+          status: 404,
+          errorType: 'elementNotFoundError',
+          error: {
+            message: err.message,
+          },
+        });
       }
     } catch (err) {
-      next({ status: 500, message: err.message });
+      next({
+        status: 500,
+        errorType: 'databaseError',
+        error: {
+          message: err.message,
+        },
+      });
     }
   },
 };

@@ -6,6 +6,7 @@ export interface Expense extends Document {
   description?: string;
   cost: number;
   date?: Date;
+  user: string;
 }
 
 export interface ExpenseQuery extends Document {
@@ -13,6 +14,7 @@ export interface ExpenseQuery extends Document {
   description?: string;
   cost?: number;
   date?: Date;
+  user?: string;
 }
 
 const expenseModel = model<Expense>('Expense', expenseSchema);

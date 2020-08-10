@@ -6,18 +6,23 @@ import { connect } from 'mongoose';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 
-import router from './routes';
+import passportConfig from './config/passport';
+
+import routes from './routes';
 
 config();
+passportConfig();
 
 const app = express();
 
 (async () => {
   try {
-    await connect(
-      `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0-uzmim.mongodb.net/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`,
-      { useNewUrlParser: true, useUnifiedTopology: true },
-    );
+    (
+      await connect(
+        `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0-uzmim.mongodb.net/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`,
+        { useNewUrlParser: true, useUnifiedTopology: true },
+      )
+    ).set('debug', true);
     console.log(`MongoDB Successfully connected.`);
   } catch (err) {
     console.log(`MongooseServerSelectionError: ${err.message}`);
@@ -63,7 +68,7 @@ app.get('/', (req: Request, res: Response) =>
   res.status(200).json({ message: 'Hello, Express! 🙂' }),
 );
 
-app.use('/api', router);
+app.use('/api', routes);
 
 export interface RouteError {
   status: number;
@@ -77,7 +82,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: RouteError, req: Request, res: Response, next: NextFunction) => {
-  res.status(err.status || 500).json({ ...err });
+  res.status(err.status || 500).json({ ...err, status: err.status || 500 });
 });
 
 export default app;
