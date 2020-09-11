@@ -1,18 +1,27 @@
 import { Router } from 'express';
-import userController from '../controllers/user';
+import authController from '../controllers/auth';
+import passport from 'passport';
 
 const authRoutes = Router();
 
 authRoutes.post(
   '/signUp',
-  userController.signUpValidate,
-  userController.signUp,
+  authController.signUpValidate,
+  authController.signUp,
 );
 
 authRoutes.post(
   '/signIn',
-  userController.signInValidate,
-  userController.signIn,
+  authController.signInValidate,
+  passport.authenticate('local', { session: false }),
+  authController.signIn,
+);
+
+authRoutes.post(
+  '/accessToken',
+  authController.accessTokenValidate,
+  passport.authenticate('jwt', { session: false }),
+  authController.accessToken,
 );
 
 export default authRoutes;

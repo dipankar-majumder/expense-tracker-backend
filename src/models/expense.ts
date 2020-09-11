@@ -1,7 +1,7 @@
 import { Document, model } from 'mongoose';
 import expenseSchema from '../schemas/expense';
 
-export interface Expense extends Document {
+export interface IExpense extends Document {
   title: string;
   description?: string;
   cost: number;
@@ -9,7 +9,7 @@ export interface Expense extends Document {
   user: string;
 }
 
-export interface ExpenseQuery extends Document {
+export interface IExpenseQuery extends Document {
   title?: string;
   description?: string;
   cost?: number;
@@ -17,6 +17,6 @@ export interface ExpenseQuery extends Document {
   user?: string;
 }
 
-const expenseModel = model<Expense>('Expense', expenseSchema);
+const expenseModel = model<IExpense>('Expense', expenseSchema);
 
 export default expenseModel;

@@ -7,7 +7,7 @@ const userRoutes = Router();
 
 userRoutes.get(
   '/me',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate(['jwt', 'google'], { session: false }),
   userController.get,
 );
 

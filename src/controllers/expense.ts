@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import expenseModel, { Expense } from '../models/expense';
+import expenseModel, { IExpense } from '../models/expense';
 
 const expenseController = {
   create: async (
@@ -12,7 +12,7 @@ const expenseController = {
       const newExpense = await expenseModel.create({
         ...req.body,
         user: req.user,
-      } as Expense);
+      } as IExpense);
       res.status(201).json(newExpense);
     } catch (err) {
       next({ status: 500, message: err.message, ...err });

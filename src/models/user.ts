@@ -1,18 +1,19 @@
 import { Document, model } from 'mongoose';
 import userSchema from '../schemas/user';
 
-export interface User extends Document {
+export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  comparePassword(password: string): Promise<boolean>;
 }
 
-export interface UserQuery extends Document {
+export interface IUserQuery extends Document {
   name?: string;
   email?: string;
   password?: string;
 }
 
-const userModel = model<User>('User', userSchema);
+const userModel = model<IUser>('User', userSchema);
 
 export default userModel;

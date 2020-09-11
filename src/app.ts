@@ -6,10 +6,11 @@ import { connect } from 'mongoose';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 
-import passportConfig from './config/passport';
+import passportConfig from './middlewares/passport';
 
 import routes from './routes';
 
+console.clear();
 config();
 passportConfig();
 
@@ -70,18 +71,18 @@ app.get('/', (req: Request, res: Response) =>
 
 app.use('/api', routes);
 
-export interface RouteError {
+export interface IRouteError {
   status: number;
   message: string;
 }
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  const error: RouteError = { status: 404, message: 'Route Not Found' };
+  const error: IRouteError = { status: 404, message: 'Route Not Found' };
   next(error);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: RouteError, req: Request, res: Response, next: NextFunction) => {
+app.use((err: IRouteError, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || 500).json({ ...err, status: err.status || 500 });
 });
 
