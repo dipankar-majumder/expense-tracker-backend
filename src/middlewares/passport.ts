@@ -46,7 +46,7 @@ const passportConfig = (): void => {
           // Find the user at given the email
           const user = await userModel.findOne({ email });
           // If user not exists, handle it || the password is not correct
-          if (!user || !(await user.comparePassword(password))) {
+          if (!user || !(await user.validPassword(password))) {
             return done(null, false);
           }
           // Otherwise, return the user

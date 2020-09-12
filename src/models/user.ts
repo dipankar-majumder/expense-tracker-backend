@@ -5,7 +5,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  comparePassword(password: string): Promise<boolean>;
+  validPassword(password: string): Promise<boolean>;
 }
 
 export interface IUserQuery extends Document {

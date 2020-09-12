@@ -29,7 +29,7 @@ userSchema.pre<IUser>('save', async function (next) {
   }
 });
 
-userSchema.method('comparePassword', async function (
+userSchema.method('validPassword', async function (
   this: IUser,
   password: string,
 ): Promise<boolean> {
